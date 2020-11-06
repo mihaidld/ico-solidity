@@ -2,9 +2,9 @@
 pragma solidity ^0.6.0;
 import "./NewToken.sol";
 
-// NewToken deployed at 0xB121E3fbe44F4d9F162F694F54bf9fe7E8D784e9
+// NewToken deployed at 0x579fb12F1fE5682B0E81B37800D484b5ABf56c02
 // price = 100000000000000000 wei d'ether (0.1 ether)
-// NewIco deployed at 0xB6e790Df0aB9Abb7E261e467Be6b65aF0d88E133
+// NewIco deployed at 0xacBC986A8BEA22b8756577C77848197E29E5fa93
 contract NewIco {
     // Declare a FirstErc20 contract
     NewToken public token;
@@ -19,7 +19,7 @@ contract NewIco {
 
     constructor(
         uint256 _price, // price pour 1 New 0.1 Ether 100000000000000000
-        address payable seller,// Alice '0x0f16385df3b467E4889b50907C365d3146016Cce'
+        address payable seller, // Alice '0x0f16385df3b467E4889b50907C365d3146016Cce'
         address erc20Address
     ) public {
         price = _price;
@@ -32,26 +32,15 @@ contract NewIco {
         return price;
     }
 
-    function getPricePerNbTokens(uint256 nbTokens)
-        public
-        view
-        returns (uint256)
-    {
+    function getPricePerNbTokens(uint256 nbTokens) public view returns (uint256) {
         uint256 buyPrice = (nbTokens * price) / _decimal;
         require(buyPrice > 0, "NewIco: Need a higher number of tokens");
         return buyPrice;
     }
 
-    function getNbTokensPerPrice(uint256 _buyPrice)
-        public
-        view
-        returns (uint256)
-    {
+    function getNbTokensPerPrice(uint256 _buyPrice) public view returns (uint256) {
         uint256 nbTokens = (_buyPrice * _decimal) / price;
-        require(
-            nbTokens > 0,
-            "NewIco: Need a higher amount of ether for buying tokens"
-        );
+        require(nbTokens > 0, "NewIco: Need a higher amount of ether for buying tokens");
         return nbTokens;
     }
 
@@ -66,10 +55,7 @@ contract NewIco {
         // check if nbTokens > 0
         require(nbTokens > 0, "ICO: Can not purchase 0 tokens");
         // check if enough ethers for nbTokens
-        require(
-            msg.value >= getPricePerNbTokens(nbTokens),
-            "ICO: Not enough ethers for purchase"
-        );
+        require(msg.value >= getPricePerNbTokens(nbTokens), "ICO: Not enough ethers for purchase");
         uint256 _realPrice = getPricePerNbTokens(nbTokens);
         uint256 _remaining = msg.value - _realPrice;
         token.transferFrom(_seller, msg.sender, nbTokens);
